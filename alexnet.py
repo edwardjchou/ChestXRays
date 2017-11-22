@@ -68,7 +68,7 @@ ydim = train_y.shape[1]
 
 def alexnet(x):
     #In Python 3.5, change this to:
-    net_data = load(open("/data/llbricks/helpKevin/alexnetWeights.npy", "rb"), encoding="latin1").item()
+    net_data = load(open("/home/cs273b_admin/data/alexnetWeights.npy", "rb"), encoding="latin1").item()
     #net_data = load("bvlc_alexnet.npy").item()
 
     def conv(input, kernel, biases, k_h, k_w, c_o, s_h, s_w,  padding="VALID", group=1):

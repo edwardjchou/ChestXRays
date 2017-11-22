@@ -15,11 +15,11 @@ def main(args):
     args.n_epochs = 51 
 
     # Directories
-    args.train_input_file = '/data/klooby/courses/cs273b/images.npy' 
-    args.train_labels_file = '/data/klooby/courses/cs273b/labels.npy' 
+    args.train_input_file = '/home/cs273b_admin/data/toy/images.npy' 
+    args.train_labels_file = '/home/cs273b_admin/data/toy/labels.npy' 
 
     # results folder will be written here
-    args.save_dir = '/data/llbricks/model_checkpoints/3d/112017_testnewarch'  
+    args.save_dir = '~/checkpoints/scratch'  
     args.input_model_ckpt = ''
 
     args.n_train = 0  
