@@ -27,7 +27,7 @@ def main(args):
     y_val = np.load(args.train_labels_file)
     sz = X_train.shape
 
-    # get other useful thing for running the tf graph
+    # get other useful things for running the tf graph
     n_train, n_val = X_train.shape[0], X_val.shape[0]
     n_batches_train = int(math.floor((n_train-1) / args.batch_size))
     n_batches_val = int(math.floor((n_val-1) / args.batch_size))
@@ -69,9 +69,7 @@ def main(args):
     make_tensorboard_summaries(args)
 
     # Launch the graph
-#    tf.initialize_all_variables()
     with tf.Session(config=tf.ConfigProto(gpu_options=gpu_options)) as sess:
-    # with tf.Session() as sess:
         merged = tf.summary.merge_all()
 
         # If an input model was provided, initialize using the model
@@ -151,35 +149,7 @@ def make_tensorboard_summaries(args):
         tf.summary.scalar('l2_err', msqerr)
         tf.summary.scalar('l1_loss', l1_loss)
         tf.summary.scalar('l2_loss', l2_loss)
-   """
-
-
-def load_from_mat(dataset_path, nimgs=0):
-    import h5py
-    if dataset_path != '':
-        if nimgs == 0:
-            img = np.array(h5py.File(dataset_path)['img'])
-            ref = np.array(h5py.File(dataset_path)['ref'])
-        else:
-            img = np.array(h5py.File(dataset_path)['img'][:nimgs])
-            ref = np.array(h5py.File(dataset_path)['ref'][:nimgs])
-        szi = img.shape
-        szr = ref.shape
-        print('(%d,%d,%d,%d,%d) tensor loaded.' % (szi[0], szi[1], szi[2], szi[3], szi[4]))
-        # Normalize img, ref by their RMS
-        img = img.reshape(szi[0], np.prod(szi[1:]))
-        ref = ref.reshape(szr[0], np.prod(szr[1:]))
-        img /= np.sqrt(np.mean(np.square(img),axis=1,keepdims=True))
-        ref /= np.sqrt(np.mean(np.square(ref),axis=1,keepdims=True))
-        print(np.min(img))
-        print(np.max(img))
-        img = img.reshape(szi)
-        ref = ref.reshape(szr)
-        # img /= np.linalg.norm(img, ord='fro', axis=(1,2),keepdims=True)
-        # ref /= np.linalg.norm(ref, ord='fro', axis=(1,2),keepdims=True)
-        return img, ref[:,:,:,:,0]
-    else:
-        return None
+    """
 
 
 def get_loss(args, y, pred):
@@ -191,8 +161,6 @@ def get_loss(args, y, pred):
     else:
         msqerr = tf.losses.mean_squared_error(y,pred)
 
-#    tvloss = tf.reduce_sum(tf.image.total_variation(pred))
-
     # Define loss and optimizer
     kernel_list = [v for v in tf.trainable_variables() if 'kernel' in v.name]
     l1_loss, l2_loss = 0, 0
@@ -204,33 +172,6 @@ def get_loss(args, y, pred):
 
     return loss, msqerr
 
-def get_loss_channel(args, y, pred):
-
-    num_channels = 16
-    y = tf.tile(tf.expand_dims(y,axis=3),[1,1,1,num_channels,1])
-    print('shape of y ',y.shape)
-    print('shape of pred ',pred.shape)
-
-    # Evaluation metric
-
-    if args.log_loss:
-        msqerr = tf.losses.mean_squared_error(tf.log(y), tf.log(pred))
-    else:
-        msqerr = tf.losses.mean_squared_error(y, pred)
-    print('shape of msqerr ',msqerr.shape)
-
-#    tvloss = tf.reduce_sum(tf.image.total_variation(pred))
-
-    # Define loss and optimizer
-    kernel_list = [v for v in tf.trainable_variables() if 'kernel' in v.name]
-    l1_loss, l2_loss = 0, 0
-    for v in kernel_list:
-        l1_loss += tf.reduce_mean(tf.abs(v))
-        l2_loss += tf.nn.l2_loss(v)
-
-    loss = msqerr + args.reg1 * l1_loss + args.reg2 * l2_loss #+ args.tv_reg*tvloss
-
-    return loss, msqerr
 
 def get_loss_classify(args, y, pred):
     

@@ -6,8 +6,6 @@ import train
 import time
 import copy
 import random
-#import infer
-#import InferWrapper as IW
 
 def main(args):
 
@@ -15,8 +13,8 @@ def main(args):
     args.n_epochs = 51 
 
     # Directories
-    args.train_input_file = '/home/cs273b_admin/data/toy/images.npy' 
-    args.train_labels_file = '/home/cs273b_admin/data/toy/labels.npy' 
+    args.train_input_file = '../data/toy/images.npy' 
+    args.train_labels_file = '../data/toy/labels.npy' 
 
     # results folder will be written here
     args.save_dir = '~/checkpoints/scratch'  
@@ -42,8 +40,6 @@ def main(args):
     args.reg1 = 1E-4 
     args.reg2 = 1E-4
     args.dropout = 0.3
-    
-#    for i in range(1000):
 
     args.run_name = runid + '_{}ch_pl'.format(nch)
 
